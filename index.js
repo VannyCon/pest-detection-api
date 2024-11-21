@@ -1,16 +1,8 @@
 const express = require("express");
 const multer = require("multer");
 const axios = require("axios");
-const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 3000;
-
-// Simple CORS configuration allowing all origins
-app.use(cors({
-    origin: "*",  // Allow all origins
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type"]
-}));
 
 // Set up multer for image upload
 const storage = multer.memoryStorage();
@@ -23,6 +15,11 @@ app.get("/", (req, res) => {
 
 // POST route to handle the image upload
 app.post("/upload", upload.single("image"), (req, res) => {
+    // Add headers to allow all origins
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "POST");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+
     if (!req.file) {
         return res.status(400).send("No image uploaded.");
     }
