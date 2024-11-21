@@ -24,7 +24,7 @@ const upload = multer({ storage: storage });
 
 // GET route
 app.get("/", (req, res) => {
-    res.send("Hello, everyone!");
+    res.send("Hello, everyones!");
 });
 
 // POST route to handle the image upload
