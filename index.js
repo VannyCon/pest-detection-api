@@ -2,20 +2,30 @@ const express = require("express");
 const multer = require("multer");
 const axios = require("axios");
 const cors = require("cors");
-
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-// Configure CORS to allow specific origins
+// Configure CORS to allow requests from multiple origins
 app.use(cors({
-    origin: ["http://127.0.0.1:5500", "http://localhost:5500"], // Add your front-end origins
-    methods: ["GET", "POST"], // Allowed HTTP methods
-    credentials: true // Allow credentials if needed
+    origin: [
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+        "https://pest-detection-api.vercel.app",
+        // Add any other domains that need access
+        // If you want to allow any origin during development, you can use:
+        // origin: "*"
+    ],
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
 }));
 
 // Set up multer for image upload (in memory storage)
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+// Pre-flight requests
+app.options("*", cors());
 
 // GET route to display "Hello, everyone!"
 app.get("/", (req, res) => {
@@ -44,18 +54,15 @@ app.post("/upload", upload.single("image"), (req, res) => {
             "Content-Type": "application/x-www-form-urlencoded",
         },
     })
-        .then(function (response) {
-            // Return the response from Roboflow API as JSON
-            res.json(response.data);
-        })
-        .catch(function (error) {
-            // Log the error response and send it to the client
-            console.error("Error response:", error.response?.data || error.message);
-            res.status(500).json({ error: error.response?.data || error.message });
-        });
+    .then(function (response) {
+        res.json(response.data);
+    })
+    .catch(function (error) {
+        console.error("Error response:", error.response?.data || error.message);
+        res.status(500).json({ error: error.response?.data || error.message });
+    });
 });
 
-// Start the server
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on port ${port}`);
 });
