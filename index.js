@@ -5,13 +5,7 @@ const cors = require("cors");
 
 const app = express();
 const port = 3000;
-
-// Configure CORS to allow specific origins
-app.use(cors({
-    origin: ["http://127.0.0.1:5500", "http://localhost:5500"], // Add your front-end origins
-    methods: ["GET", "POST"], // Allowed HTTP methods
-    credentials: true // Allow credentials if needed
-}));
+app.use(cors());
 
 // Set up multer for image upload (in memory storage)
 const storage = multer.memoryStorage();
