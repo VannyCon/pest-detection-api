@@ -4,6 +4,20 @@ const axios = require("axios");
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Middleware to add CORS headers to all responses
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', '*');
+    
+    // Handle OPTIONS request
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+    
+    next();
+});
+
 // Set up multer for image upload
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -15,11 +29,6 @@ app.get("/", (req, res) => {
 
 // POST route to handle the image upload
 app.post("/upload", upload.single("image"), (req, res) => {
-    // Add headers to allow all origins
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "POST");
-    res.header("Access-Control-Allow-Headers", "Content-Type");
-
     if (!req.file) {
         return res.status(400).send("No image uploaded.");
     }
