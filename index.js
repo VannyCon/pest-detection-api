@@ -37,9 +37,9 @@ app.post("/upload", upload.single("image"), (req, res) => {
 
     axios({
         method: "POST",
-        url: "https://detect.roboflow.com/mypest-detection/1",
+        url: "https://detect.roboflow.com/gpoints/1",
         params: {
-            api_key: "MdGDiEHmvh39eJ3mCYef",
+            api_key: "Tbq0ICVUqPZu40J7Iuzp",
         },
         data: base64Image,
         headers: {
